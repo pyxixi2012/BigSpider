@@ -1,0 +1,131 @@
+{% extends 'index.html' %}
+
+{% block options %}
+<div class="sidebar-wrapper">
+    <div class="logo">
+        <h4 class="simple-text">Big Spider</h4>
+    </div>
+    <ul class="nav">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="pe-7s-file"></i>
+                <p>运行状态</p>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'site_management' %}">
+                <i class="pe-7s-helm"></i>
+                <p>站点管理</p>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'spiders_management' %}">
+                <i class="pe-7s-culture"></i>
+                <p>爬虫管理</p>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'log_management' %}">
+                <i class="pe-7s-news-paper"></i>
+                <p>日志管理</p>
+            </a>
+        </li>
+        <li class="active">
+            <a href="{% url 'crawling_info' %}">
+                <i class="pe-7s-ribbon"></i>
+                <p>爬取结果</p>
+            </a>
+        </li>
+
+    </ul>
+</div>
+{% endblock %}
+
+{% block page_container %}
+<div class="content">
+    <div class="container-fluid">
+        {% block content %}
+        {% if flag %}
+        <div class="panel panel-primary panelClass">
+            <div class="panel-heading">
+                <h3 class="panel-title paneltop">爬取信息呈现</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="box">
+                            <table class="table table-hover" id="bootstrap-table">
+                                <thead>
+                                <tr>
+                                    <th>来源</th>
+                                    <th>标题</th>
+                                    <th>发布时间</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for news in crawling_web_info %}
+                                <tr>
+                                    <td></td>
+                                    <td data-toggle="modal"><a href="javascript:show_data('{{ news.content }}');"
+                                                               style="color: black">{{ news.title }}</a></td>
+                                    <td>{{news.time}}</td>
+                                </tr>
+                                {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="header">
+            <h4 class="title text-center"><br>欲使用爬虫系统请先登录<br><br>若无账号请先注册.</h4><br>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+</div>
+<!--信息展示弹出框-->
+<div id="update_form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="height:600px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">信息展示</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal col-md-offset-0">
+                    <div class="panel panel-default">
+                        <div class="panel-body panelhigh">
+                            <!--文本内容展示-->
+                            <div data-spy="scroll" data-target="#navbar-example" data-offset="0"
+                                 style="height:400px;overflow:auto; position: relative;">
+                                 <p id="my_p"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function show_data(data){
+        var content = data;
+        $("#update_form").modal('show');
+        $("#my_p").html(content);
+    }
+</script>
+{% endblock %}
+
+
